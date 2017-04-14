@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "455512986004",
+    "project_id": "sport-event-app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:455512986004:android:f363407d1d70e5c1",
+        "android_client_info": {
+          "package_name": "com.example.myfirstapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "455512986004-vt1gtnrm06g4qk0o9cn3a2d5obg9hfg3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myfirstapp",
+            "certificate_hash": "f82a237126021e90b928794f2f83126586b3a8fa"
+          }
+        },
+        {
+          "client_id": "455512986004-s54hfs9281oa9ppe4g1p1cdmluckghi4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWjrgNhH4qTg6RGbdj7h_lk4MfkF1CWMA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
