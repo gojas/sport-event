@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.content.Intent;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.facebook.FacebookSdk;
 
 public class MainActivity extends AppCompatActivity {
 

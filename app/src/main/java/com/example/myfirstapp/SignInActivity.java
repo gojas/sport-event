@@ -8,6 +8,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -18,6 +28,13 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.concurrent.Callable;
+
+
 public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
@@ -27,6 +44,10 @@ public class SignInActivity extends AppCompatActivity implements
     private GoogleApiClient googleApiClient;
     private TextView statusTextView;
     private ProgressDialog progressDialog;
+
+    /** facebook stuff */
+    private CallbackManager facebookCallbackManager;
+    private LoginButton facebookSignInButton;
 
     private static final int RC_SIGN_IN = 9001;
 
@@ -59,6 +80,64 @@ public class SignInActivity extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         // [END build_client]
+
+        facebookCallbackManager = CallbackManager.Factory.create();
+
+        facebookSignInButton = (LoginButton)findViewById(R.id.login_button);
+
+        facebookSignInButton.setReadPermissions(Arrays.asList(
+                "public_profile", "email", "user_birthday", "user_friends"));
+
+        facebookSignInButton .registerCallback(facebookCallbackManager ,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(final LoginResult loginResult) {
+
+                        AccessToken accessToken = loginResult.getAccessToken();
+                        Profile profile = Profile.getCurrentProfile();
+
+                        GraphRequest request = GraphRequest.newMeRequest(
+                                loginResult.getAccessToken(),
+                                new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override
+                                    public void onCompleted(JSONObject object, GraphResponse response) {
+                                        Log.v("LoginActivity", response.toString());
+
+                                        //Profile profile = Profile.getCurrentProfile();
+                                        //String firstName = profile.getFirstName();
+
+                                        try {
+                                            String birthday = object.getString("birthday"); // 01/31/1980 format
+                                            String email = object.getString("email");
+
+                                            statusTextView.setText(email);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+
+                                            statusTextView.setText(e.getMessage());
+                                        }
+                                    }
+                                });
+
+                        Bundle parameters = new Bundle();
+                        parameters.putString("fields", "id, name, email, gender, birthday");
+                        request.setParameters(parameters);
+                        request.executeAsync();
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        statusTextView.setText("FACEBOOK CANCEL");
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        Log.d(ACTIVITY, error.getMessage());
+                        statusTextView.setText("FACEBOOK ERROR");
+                    }
+                }
+        );
     }
 
     @Override
@@ -167,6 +246,10 @@ public class SignInActivity extends AppCompatActivity implements
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
+
+        // (...)
+
+        facebookCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
     // [END onActivityResult]
 

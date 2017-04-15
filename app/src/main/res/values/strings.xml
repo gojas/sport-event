@@ -24,4 +24,7 @@
     <!-- Server Client ID.  This should be a valid Web OAuth 2.0 Client ID obtained
          from https://console.developers.google.com/ -->
     <string name="server_client_id">524080835550-tamseqf7k1814s56dlptbhqr91kac2rt.apps.googleusercontent.com</string>
+
+    <!-- Facebook login -->
+    <string name="facebook_app_id">1406150476127108</string>
 </resources>
